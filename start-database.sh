@@ -29,7 +29,7 @@ fi
 
 # import env variables from .env
 set -a
-source .env.local
+source .env
 
 DB_PASSWORD=$(echo "$POSTGRES_URL" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
 DB_PORT=$(echo "$POSTGRES_URL" | awk -F':' '{print $4}' | awk -F'\/' '{print $1}')
@@ -43,7 +43,7 @@ if [ "$DB_PASSWORD" = "password" ]; then
   fi
   # Generate a random URL-safe password
   DB_PASSWORD=$(openssl rand -base64 12 | tr '+/' '-_')
-  sed -i -e "s#:password@#:$DB_PASSWORD@#" .env.local
+  sed -i -e "s#:password@#:$DB_PASSWORD@#" .env
 fi
 
 docker run -d \
