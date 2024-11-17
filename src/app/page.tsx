@@ -6,7 +6,7 @@ export default async function HomePage() {
   // const posts = await db.query.posts.findMany();
   // console.log(posts);
   const images = await db.query.images.findMany({
-    orderBy: (image, {desc}) => desc(image.id),
+    orderBy: (image, { desc }) => desc(image.id),
   });
 
   return (

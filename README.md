@@ -8,8 +8,8 @@ The codebase from Theo's [T3 App Router Tutorial on YouTube](https://github.com/
 - [x] Scaffold basic ui with mock data
 - [x] Tidy up build process
 - [x] Actually set up a database (vercel postgres)
-- [] Attach database to UI
-- [] Add authentication (w/ clerk)
+- [x] Attach database to UI
+- [x] Add authentication (w/ clerk)
 - [] Add image upload
 - [] "taint" (server-only)
 - [] Use Next/Image component
