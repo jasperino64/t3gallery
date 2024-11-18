@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout(props: {
-  children: React.ReactNode,
-  modal: React.ReactNode,
+  children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <ClerkProvider>
@@ -31,9 +31,11 @@ export default function RootLayout(props: {
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-        <body className="flex flex-col gap-4">
-          <TopNav />
-          {props.children}
+        <body>
+          <div className="grid h-screen grid-rows-[auto,1fr]">
+            <TopNav />
+            <main className="overflow-y-scroll">{props.children}</main>
+          </div>
           {props.modal}
           <div id="modal-root" />
         </body>
