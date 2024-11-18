@@ -1,13 +1,12 @@
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { Sign } from "crypto";
 import { db } from "~/server/db";
+import { getMyImages } from "~/server/queries";
 
 export const dynamic = "force-dynamic";
 
 async function Images() {
-  const images = await db.query.images.findMany({
-    orderBy: (image, { desc }) => desc(image.id),
-  });
+  const images = await getMyImages();
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-4">
