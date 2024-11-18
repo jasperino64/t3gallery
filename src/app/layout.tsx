@@ -1,6 +1,6 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
+import { Inter } from "next/font/google";
 import { type Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { TopNav } from "./_components/topnav";
@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   description: "Practice Gallery",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export default function RootLayout(props: {
   children: React.ReactNode;
@@ -31,7 +36,7 @@ export default function RootLayout(props: {
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-        <body>
+        <body className={`font-sans ${inter.variable}`}>
           <div className="grid h-screen grid-rows-[auto,1fr]">
             <TopNav />
             <main className="overflow-y-scroll">{props.children}</main>
