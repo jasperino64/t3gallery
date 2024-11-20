@@ -1,9 +1,8 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import { useUploadThing } from "~/utils/uploadthing";
 import { toast } from "sonner";
-import posthog from "posthog-js";
-import { use } from "react";
 import { usePostHog } from "posthog-js/react";
 
 // inferred input off useUploadThing
@@ -40,7 +39,7 @@ function UploadSVG() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="size-6"
+      className="h-6 w-6"
     >
       <path
         strokeLinecap="round"
@@ -71,45 +70,38 @@ function LoadingSpinnerSVG() {
     </svg>
   );
 }
-function makeToast() {
-  toast(
-    <div className="flex items-center gap-2">
-      <LoadingSpinnerSVG /> <span className="text-lg">Uploading...</span>
-    </div>,
-    {
-      duration: 1000000,
-      id: "upload-begin",
-    },
-  );
-}
-// window.makeToast = makeToast;
-// window.testPosthog = () => {
-//   posthog.capture("test_event", { test: "test" });
-// };
 
 export function SimpleUploadButton() {
   const router = useRouter();
 
   const posthog = usePostHog();
+
   const { inputProps } = useUploadThingInputProps("imageUploader", {
-    onUploadBegin: () => {
+    onUploadBegin() {
       posthog.capture("upload_begin");
       toast(
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 text-white">
           <LoadingSpinnerSVG /> <span className="text-lg">Uploading...</span>
         </div>,
         {
-          duration: 1000000,
+          duration: 100000,
           id: "upload-begin",
         },
       );
     },
-    onClientUploadComplete: (result) => {
-      router.refresh();
+    onUploadError(error) {
+      posthog.capture("upload_error", { error });
       toast.dismiss("upload-begin");
-      toast("Upload complete");
+      toast.error("Upload failed");
+    },
+    onClientUploadComplete() {
+      toast.dismiss("upload-begin");
+      toast("Upload complete!");
+
+      router.refresh();
     },
   });
+
   return (
     <div>
       <label htmlFor="upload-button" className="cursor-pointer">
