@@ -1,3 +1,4 @@
+"use server";
 import "server-only";
 import { db } from "./db";
 import { auth } from "@clerk/nextjs/server";
@@ -5,6 +6,7 @@ import { images } from "./db/schema";
 import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import analyticsServerClient from "./analytics";
+import { revalidatePath } from "next/cache";
 
 export async function getMyImages() {
   const user = await auth();
@@ -48,6 +50,5 @@ export async function deleteImage(id: number) {
       imageId: id,
     },
   });
-
   redirect("/");
 }

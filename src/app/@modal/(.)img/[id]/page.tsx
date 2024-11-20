@@ -2,10 +2,11 @@ import { Modal } from "./modal";
 import { FullPageImageView } from "~/common/full-page-image-view";
 
 export default async function PhotoModal({
-  params: { id: photoId },
+  params,
 }: {
   params: { id: string };
 }) {
+  const { id: photoId } = await params;
   return (
     <Modal>
       <FullPageImageView photoId={photoId} />
