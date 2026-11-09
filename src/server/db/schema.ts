@@ -31,6 +31,7 @@ export const images = createTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
       () => new Date(),
     ),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),

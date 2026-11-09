@@ -22,7 +22,7 @@ async function Images() {
               alt={image.name}
             />
           </Link>
-          <div>{image.name}</div>
+          <div className="text-center">{image.name.length <= 10 ? image.name : `${image.name.substring(0, 15)}...`}</div>
         </div>
       ))}
     </div>
