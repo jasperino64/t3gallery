@@ -25,11 +25,11 @@ export const ourFileRouter = {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
 
-      console.log("file url", file.url);
+      console.log("file url", file.ufsUrl);
 
       await db.insert(images).values({
         name: file.name,
-        url: file.url,
+        url: file.ufsUrl,
         userId: metadata.userId,
       });
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback

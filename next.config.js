@@ -9,7 +9,10 @@ import { withSentryConfig } from "@sentry/nextjs";
 const coreConfig = {
   crossOrigin: "anonymous",
   images: {
-    remotePatterns: [{ hostname: "utfs.io" }],
+    remotePatterns: [
+      { hostname: "utfs.io" },
+      { protocol: "https", hostname: "**.ufs.sh", pathname: "/f/**" },
+    ],
   },
   typescript: {
     ignoreBuildErrors: true,
