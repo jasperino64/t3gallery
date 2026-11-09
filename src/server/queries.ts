@@ -163,6 +163,47 @@ export async function restoreImage(id: number) {
   revalidatePath("/trash");
 }
 
+export async function restoreTrashedImages(ids: number[]) {
+  const user = await auth();
+  if (!user.userId) throw new Error("Unauthorized");
+
+  const uniqueIds = [...new Set(ids)];
+  if (
+    uniqueIds.length === 0 ||
+    uniqueIds.some((id) => !Number.isSafeInteger(id) || id < 1)
+  ) {
+    throw new Error("Invalid image selection");
+  }
+
+  const trashedImages = await db.query.images.findMany({
+    where: (model, { and, eq, inArray, isNotNull }) =>
+      and(
+        eq(model.userId, user.userId),
+        inArray(model.id, uniqueIds),
+        isNotNull(model.deletedAt),
+      ),
+  });
+
+  if (trashedImages.length !== uniqueIds.length) {
+    throw new Error("One or more selected images are unavailable");
+  }
+
+  await db
+    .update(images)
+    .set({ deletedAt: null })
+    .where(
+      and(
+        eq(images.userId, user.userId),
+        inArray(images.id, uniqueIds),
+        isNotNull(images.deletedAt),
+      ),
+    );
+
+  revalidatePath("/", "page");
+  revalidatePath("/", "layout");
+  revalidatePath("/trash");
+}
+
 export async function permanentlyDeleteTrashedImages(ids: number[]) {
   const user = await auth();
   if (!user.userId) throw new Error("Unauthorized");
@@ -208,7 +249,8 @@ export async function permanentlyDeleteTrashedImages(ids: number[]) {
   });
 
   const { success } = await utapi.deleteFiles(fileKeys);
-  if (!success) throw new Error("Failed to delete selected files from UploadThing");
+  if (!success)
+    throw new Error("Failed to delete selected files from UploadThing");
 
   await db
     .delete(images)

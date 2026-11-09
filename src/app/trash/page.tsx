@@ -3,6 +3,7 @@ import {
   getMyTrashedImages,
   permanentlyDeleteTrashedImages,
   restoreImage,
+  restoreTrashedImages,
 } from "~/server/queries";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +16,13 @@ export default async function TrashPage() {
 
     const imageId = Number(formData.get("imageId"));
     await restoreImage(imageId);
+  }
+
+  async function restoreSelectedImages(formData: FormData) {
+    "use server";
+
+    const imageIds = formData.getAll("imageId").map(Number);
+    await restoreTrashedImages(imageIds);
   }
 
   async function deleteSelectedImages(
@@ -38,10 +46,11 @@ export default async function TrashPage() {
   }
 
   return (
-    <main className="p-4">
+    <main className="mx-auto min-h-full max-w-[1600px] px-5 py-10 sm:px-8 lg:px-12">
       <TrashImageManager
         images={images.map(({ id, name, url }) => ({ id, name, url }))}
         restoreAction={restoreSelectedImage}
+        restoreSelectedAction={restoreSelectedImages}
         deleteAction={deleteSelectedImages}
       />
     </main>
